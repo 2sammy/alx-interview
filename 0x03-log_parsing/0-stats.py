@@ -5,7 +5,6 @@ Task - Script that reads stdin line by line and computes metrics
 
 import sys
 
-
 if __name__ == "__main__":
     st_code = {"200": 0,
                "301": 0,
