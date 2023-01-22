@@ -1,43 +1,48 @@
 #!/usr/bin/python3
-"""  script that reads stdin line by line and computes metrics """
+"""
+Task - Script that reads stdin line by line and computes metrics
+"""
 
 import sys
 
-STATUS_CODES = {'200': 0,
-                '301': 0, '400': 0,
-                '401': 0, '403': 0,
-                '404': 0, '405': 0,
-                '500': 0}
 
-total_size = 0
-number_of_lines = 0
+if __name__ == "__main__":
+    st_code = {"200": 0,
+               "301": 0,
+               "400": 0,
+               "401": 0,
+               "403": 0,
+               "404": 0,
+               "405": 0,
+               "500": 0}
+    count = 1
+    file_size = 0
 
+    def parse_line(line):
+        """ Read, parse and grab data"""
+        try:
+            parsed_line = line.split()
+            status_code = parsed_line[-2]
+            if status_code in st_code.keys():
+                st_code[status_code] += 1
+            return int(parsed_line[-1])
+        except Exception:
+            return 0
 
-def print_status_code(total_size):
-    print("File size: {:d}".format(total_size))
-    for key, value in sorted(STATUS_CODES.items()):
-        if value != 0:
-            print("{}: {:d}".format(key, value))
+    def print_stats():
+        """print stats in ascending order"""
+        print("File size: {}".format(file_size))
+        for key in sorted(st_code.keys()):
+            if st_code[key]:
+                print("{}: {}".format(key, st_code[key]))
 
-
-try:
-    for argument in sys.stdin:
-        arguments = argument.split(" ")
-        if len(arguments) > 2:
-            status_code = arguments[-2]
-            file_size = arguments[-1]
-
-            if status_code in STATUS_CODES:
-                STATUS_CODES[status_code] += 1
-
-            total_size += int(file_size)
-            number_of_lines += 1
-
-            if number_of_lines == 10:
-                print_status_code(total_size)
-                number_of_lines = 0
-
-except KeyboardInterrupt:
-    pass
-finally:
-    print_status_code(total_size)
+    try:
+        for line in sys.stdin:
+            file_size += parse_line(line)
+            if count % 10 == 0:
+                print_stats()
+            count += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()
