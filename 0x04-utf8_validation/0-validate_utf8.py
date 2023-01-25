@@ -5,6 +5,7 @@ string of ints represents a valid UTF-8 encoding.
 """
 from itertools import takewhile
 
+
 def int_to_bits(nums):
     """
     Helper function
@@ -18,6 +19,7 @@ def int_to_bits(nums):
             bits.append(bool(num & mask))
         yield bits
 
+
 def validUTF8(data):
     """
     Takes a list of ints and returns true if the list is
@@ -28,7 +30,6 @@ def validUTF8(data):
         bool : True or False
     """
     bits = int_to_bits(data)
-   
     for byte in bits:
         # if single byte char, then valid. continue
         if byte[0] == 0:
