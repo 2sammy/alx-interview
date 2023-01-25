@@ -4,8 +4,6 @@ Define validUTF8(data) function that validates whether a
 string of ints represents a valid UTF-8 encoding.
 """
 from itertools import takewhile
-
-
 def int_to_bits(nums):
     """
     Helper function
@@ -18,7 +16,6 @@ def int_to_bits(nums):
             mask >>= 1
             bits.append(bool(num & mask))
         yield bits
-
 
 def validUTF8(data):
     """
