@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3
 """
 Define validUTF8(data) function that validates whether a
 string of ints represents a valid UTF-8 encoding.
