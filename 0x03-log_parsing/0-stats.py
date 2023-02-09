@@ -1,48 +1,44 @@
-#!/usr/bin/python3
+!/usr/bin/python3
 """
-Task - Script that reads stdin line by line and computes metrics
+Log parsing
 """
-
 import sys
 
 
+def print_metrics(file_size, status_codes):
+    """
+    Print metrics
+    """
+    print("File size: {}".format(file_size))
+    codes_sorted = sorted(status_codes.keys())
+    for code in codes_sorted:
+        if status_codes[code] > 0:
+            print("{}: {}".format(code, status_codes[code]))
+
+
+codes_count = {'200': 0, '301': 0, '400': 0, '401': 0,
+               '403': 0, '404': 0, '405': 0, '500': 0}
+file_size_total = 0
+count = 0
+
 if __name__ == "__main__":
-    st_code = {"200": 0,
-               "301": 0,
-               "400": 0,
-               "401": 0,
-               "403": 0,
-               "404": 0,
-               "405": 0,
-               "500": 0}
-    count = 1
-    file_size = 0
-
-    def parse_line(line):
-        """ Read, parse and grab data"""
-        try:
-            parsed_line = line.split()
-            status_code = parsed_line[-2]
-            if status_code in st_code.keys():
-                st_code[status_code] += 1
-            return int(parsed_line[-1])
-        except Exception:
-            return 0
-
-    def print_stats():
-        """print stats in ascending order"""
-        print("File size: {}".format(file_size))
-        for key in sorted(st_code.keys()):
-            if st_code[key]:
-                print("{}: {}".format(key, st_code[key]))
-
     try:
         for line in sys.stdin:
-            file_size += parse_line(line)
-            if count % 10 == 0:
-                print_stats()
+            try:
+                status_code = line.split()[-2]
+                if status_code in codes_count.keys():
+                    codes_count[status_code] += 1
+                # Grab file size
+                file_size = int(line.split()[-1])
+                file_size_total += file_size
+            except Exception:
+                pass
+            # print metrics if 10 lines have been read
             count += 1
+            if count == 10:
+                print_metrics(file_size_total, codes_count)
+                count = 0
     except KeyboardInterrupt:
-        print_stats()
+        print_metrics(file_size_total, codes_count)
         raise
-    print_stats()
+   print_metrics(file_size_total, codes_count)
